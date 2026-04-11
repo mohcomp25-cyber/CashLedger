@@ -1,7 +1,7 @@
 // ============================================================
 // WEBHOOK — غيّر هنا فقط
 // ============================================================
-const WEBHOOK_URL =  "https://lachelle-sigillary-lala.ngrok-free.dev/webhook-test/CashLedger";
+const WEBHOOK_URL = "https://lachelle-sigillary-lala.ngrok-free.dev/webhook-test/CashLedger";
 // ============================================================
 
 const T = {
@@ -194,30 +194,41 @@ function addFiles(files) {
   });
 }
 
-function addImg(file) {
-  const id  = "i_" + Date.now() + "_" + Math.random().toString(36).slice(2,6);
-  const url = URL.createObjectURL(file);
-  imgs.push({ id, url, name: file.name });
+async function addImg(file) {
+  const id       = "i_" + Date.now() + "_" + Math.random().toString(36).slice(2,6);
+  const localUrl = URL.createObjectURL(file);
 
-  const zone = document.getElementById("uploadZone");
-  zone.classList.add("done");
-  setTimeout(() => zone.classList.remove("done"), 1200);
+  // Convert to base64 for sending to n8n
+  const base64full = await toBase64(file);
+  const base64data = base64full.split(",")[1]; // strip data:image/...;base64,
+
+  imgs.push({ id, url: localUrl, name: file.name,
+              base64: base64data, mimeType: file.type });
 
   const list = document.getElementById("imageList");
   const item = document.createElement("div");
   item.className = "img-item"; item.id = id;
   item.innerHTML = `
-    <div class="img-thumb" style="background-image:url('${url}')"></div>
+    <div class="img-thumb" style="background-image:url('${localUrl}')"></div>
     <div class="img-info">
       <span class="img-name">${file.name}</span>
-      <span class="img-status">✅ ${t.uploaded}</span>
-      <div class="img-url-row">
-        <input class="img-url-input" value="${url}" readonly />
-        <button class="copy-btn" onclick="copyUrl('${url}')">${t.copyLink}</button>
-      </div>
+      <span class="img-status">✅ ${t.uploaded} — سيُرفع عند الإرسال</span>
     </div>
     <button class="del-btn" onclick="removeImg('${id}')">✕</button>`;
   list.appendChild(item);
+
+  const zone = document.getElementById("uploadZone");
+  zone.classList.add("done");
+  setTimeout(() => zone.classList.remove("done"), 1200);
+}
+
+function toBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload  = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
 }
 
 function removeImg(id) {
@@ -260,12 +271,19 @@ async function doSubmit() {
   const amount = parseFloat(document.getElementById("amount").value);
   const desc   = document.getElementById("description").value;
   const date   = document.getElementById("opDate").value;
-  const urls   = imgs.map(i => i.url);
   const bBefore = balance;
   const bAfter  = opType === "receive" ? balance + amount : balance - amount;
 
+  // Send images as base64 so n8n can upload them to Google Drive
+  const imageFiles = imgs.map(i => ({
+    name:     i.name,
+    mimeType: i.mimeType,
+    base64:   i.base64,
+  }));
+
   const payload = { operationType: opType, amount, description: desc, date,
-    photosEnabled: photosOn, imageUrls: urls,
+    photosEnabled: photosOn,
+    imageFiles,                    // base64 images for n8n → Drive
     balanceBefore: bBefore, balanceAfter: bAfter,
     lang, timestamp: new Date().toISOString() };
 
@@ -280,7 +298,8 @@ async function doSubmit() {
     }).catch(() => {});
 
     addToLedger({ operationType: opType, amount, description: desc, date,
-      imageUrls: urls, balanceBefore: bBefore, balanceAfter: bAfter,
+      imageUrls: imgs.map(i => i.url),
+      balanceBefore: bBefore, balanceAfter: bAfter,
       timestamp: payload.timestamp });
 
     showSuccess(payload);
