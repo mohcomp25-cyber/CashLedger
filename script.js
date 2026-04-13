@@ -1,9 +1,7 @@
 // ============================================================
 // WEBHOOK — غيّر هنا فقط
-
 // ============================================================
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyFi_7QS1eQuhTFwoOmzmKn0FMq-xdbL4ZtQdPPee5E4OTwjvj781feWC6mOTA3Hb69/exec";
-
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwUjIdrJ5M4v6dA8XXrU3JJ5fuaeZJ9TPOerc99IAyEayZC9jFF59sWBeOGRfuaUEZ6/exec";
 // ============================================================
 
 const T = {
@@ -295,9 +293,11 @@ async function doSubmit() {
 
     fetch(WEBHOOK_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain", "ngrok-skip-browser-warning": "true" },
-      body: JSON.stringify(payload), mode: "no-cors",
-    }).catch(() => {});
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload),
+    }).then(r => r.json()).then(data => {
+      console.log("Apps Script response:", data);
+    }).catch(err => console.error("Send error:", err));
 
     addToLedger({ operationType: opType, amount, description: desc, date,
       imageUrls: imgs.map(i => i.url),
