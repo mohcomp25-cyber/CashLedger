@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نظام إدارة العهدة — Brave</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-badge">
+      <span class="logo-b">B</span>
+      <div class="logo-ring"></div>
+    </div>
+    <div class="logo-text">
+      <span class="logo-name">Brave</span>
+      <span class="logo-sub" data-i18n="title">نظام إدارة العهدة</span>
+    </div>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="ar">عربي</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="ur">اردو</button>
+  </div>
+</header>
+
+<div class="page-wrapper">
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero-card">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-border-spin"></div>
+      <div class="hero-scan"></div>
+
+      <div class="hero-body">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-dot"></span>
+          Brave Financial System
+        </div>
+        <h1 class="hero-title" data-i18n="title">نظام إدارة العهدة</h1>
+        <p class="hero-sub" data-i18n="subtitle">سجّل عمليات العهدة المالية بدقة واحترافية</p>
+
+        <div class="balance-card" id="balanceDisplay">
+          <div class="balance-info">
+            <span class="balance-lbl" data-i18n="balance">الرصيد الحالي</span>
+            <div class="balance-row">
+              <span class="balance-num" id="balanceAmount">0.00</span>
+              <span class="balance-cur" data-i18n="sar">ريال</span>
+            </div>
+          </div>
+          <div class="balance-icon">💰</div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span class="progress-lbl" data-i18n="progress">اكتمال النموذج</span>
+            <span class="progress-pct" id="progressPct">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div id="formContent">
+
+      <!-- S1: Operation -->
+      <div class="card" id="section1">
+        <div class="card-header">
+          <div class="card-icon">⚙️</div>
+          <span class="card-title" data-i18n="section1">العملية المالية</span>
+        </div>
+        <div class="card-body">
+          <div class="op-grid">
+            <div class="op-card" data-type="receive">
+              <div class="op-check">✓</div>
+              <div class="op-icon-wrap">📥</div>
+              <div class="op-name" data-i18n="receive">استلام عهدة</div>
+              <span class="op-tag" data-i18n="receiveDesc">يزيد الرصيد</span>
+            </div>
+            <div class="op-card" data-type="disburse">
+              <div class="op-check">✓</div>
+              <div class="op-icon-wrap">📤</div>
+              <div class="op-name" data-i18n="disburse">صرف عهدة</div>
+              <span class="op-tag" data-i18n="disburseDesc">ينقص الرصيد</span>
+            </div>
+          </div>
+          <div class="preview-row">
+            <span class="preview-lbl" data-i18n="balanceAfter">الرصيد بعد العملية</span>
+            <span class="preview-val" id="balancePreview">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2: Details -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📝</div>
+          <span class="card-title" data-i18n="section2">بيانات العملية</span>
+        </div>
+        <div class="card-body">
+          <div class="field">
+            <label class="field-lbl" data-i18n="amount">المبلغ (ريال سعودي)</label>
+            <div class="field-wrap">
+              <span class="field-ico">﷼</span>
+              <input id="amount" class="field-input ico-start" type="number" min="0" step="0.01"
+                placeholder="أدخل المبلغ" data-i18n-placeholder="amountPlaceholder" />
+            </div>
+          </div>
+          <div class="field" id="descGroup">
+            <label class="field-lbl" data-i18n="description">وصف العملية</label>
+            <div class="field-wrap">
+              <textarea id="description" class="field-input" rows="3"
+                placeholder="اكتب وصفاً..." data-i18n-placeholder="descPlaceholder"></textarea>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-lbl" data-i18n="date">تاريخ اليوم</label>
+            <div class="field-wrap">
+              <span class="field-ico">📅</span>
+              <input id="opDate" class="field-input ico-start" type="date" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3: Photos -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🖼️</div>
+          <span class="card-title" data-i18n="section3">الصور والمرفقات</span>
+        </div>
+        <div class="card-body">
+          <div class="toggle-row">
+            <span class="toggle-lbl" data-i18n="enablePhotos">تفعيل إضافة الصور</span>
+            <label class="switch">
+              <input type="checkbox" id="photosToggle" />
+              <span class="switch-track"></span>
+            </label>
+          </div>
+          <div class="no-photo-msg" id="noPhotosMsg">
+            <span data-i18n="noPhotosNeeded">لا حاجة لإضافة صور لهذه العملية</span>
+          </div>
+          <div class="upload-wrap hidden" id="uploadSection">
+            <div class="drop-zone" id="uploadZone">
+              <div class="drop-icon">📎</div>
+              <div class="drop-hint" data-i18n="uploadHint">اضغط أو اسحب لرفع الصور</div>
+              <div class="drop-sub" data-i18n="uploadSub">PNG, JPG, WEBP — حتى 5MB</div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display:none" />
+            <div class="img-list" id="imageList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submitBtn">
+          <span class="btn-ico">✓</span>
+          <span class="btn-txt" data-i18n="submit">تأكيد العملية</span>
+        </button>
+      </div>
+
+    </div><!-- /formContent -->
+
+    <!-- SUCCESS -->
+    <div class="success-screen hidden" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <h2 class="success-title" data-i18n="successTitle">تمت العملية بنجاح!</h2>
+      <p class="success-sub" data-i18n="successSub">تم تسجيل العملية وإرسالها بنجاح</p>
+      <div class="success-balance-card">
+        <div class="success-lbl" data-i18n="balanceAfter">الرصيد بعد العملية</div>
+        <div class="success-num" id="finalBalance">0.00 ريال</div>
+      </div>
+      <button class="new-btn" id="newOpBtn" data-i18n="newOp">عملية جديدة</button>
+    </div>
+
+    <!-- LEDGER -->
+    <div class="ledger" id="ledgerSection">
+      <div class="ledger-hd">
+        <div class="ledger-hd-right">
+          <span class="ledger-ico">📋</span>
+          <span class="ledger-title">سجل العمليات</span>
+          <span class="ledger-badge" id="ledgerCount">0</span>
+        </div>
+        <button class="ledger-clear" onclick="clearLedger()">مسح الكل</button>
+      </div>
+
+      <div class="ledger-summary">
+        <div class="ledger-stat receive">
+          <span class="stat-lbl">إجمالي الاستلام</span>
+          <span class="stat-val" id="totalReceive">0.00</span>
+        </div>
+        <div class="ledger-stat disburse">
+          <span class="stat-lbl">إجمالي الصرف</span>
+          <span class="stat-val" id="totalDisburse">0.00</span>
+        </div>
+        <div class="ledger-stat bal">
+          <span class="stat-lbl">الرصيد</span>
+          <span class="stat-val" id="ledgerBalance">0.00</span>
+        </div>
+      </div>
+
+      <div class="ledger-scroll">
+        <table class="ledger-tbl">
+          <thead>
+            <tr>
+              <th>#</th><th>التاريخ</th><th>النوع</th>
+              <th>المبلغ</th><th>الوصف</th><th>صورة</th><th>الرصيد</th>
+            </tr>
+          </thead>
+          <tbody id="ledgerBody">
+            <tr id="ledgerEmpty" class="empty-row">
+              <td colspan="7">لا توجد عمليات مسجّلة بعد</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<canvas id="confettiCanvas"></canvas>
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
