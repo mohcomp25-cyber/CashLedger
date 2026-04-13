@@ -1,7 +1,9 @@
 // ============================================================
 // WEBHOOK — غيّر هنا فقط
+
 // ============================================================
-const WEBHOOK_URL = "https://lachelle-sigillary-lala.ngrok-free.dev/webhook-test/CashLedger";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyFi_7QS1eQuhTFwoOmzmKn0FMq-xdbL4ZtQdPPee5E4OTwjvj781feWC6mOTA3Hb69/exec";
+
 // ============================================================
 
 const T = {
