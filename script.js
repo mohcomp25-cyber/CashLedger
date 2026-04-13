@@ -291,12 +291,11 @@ async function doSubmit() {
     if (opType === "receive") balance += amount;
     else balance -= amount;
 
-    fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(payload),
-    }).then(r => r.json()).then(data => {
-      console.log("Apps Script response:", data);
+    // إرسال لـ Apps Script عبر GET مع البيانات مشفرة
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+    fetch(`${WEBHOOK_URL}?data=${encoded}`, {
+      method: "GET",
+      mode: "no-cors",
     }).catch(err => console.error("Send error:", err));
 
     addToLedger({ operationType: opType, amount, description: desc, date,
